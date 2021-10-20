@@ -1,0 +1,1 @@
+{"config": "configs/faster_rcnn/faster_rcnn_r50_fpn_1x_TBX11.py", "metric": {"bbox_mAP": 0.138, "bbox_mAP_50": 0.298, "bbox_mAP_75": 0.121, "bbox_mAP_s": 0.0, "bbox_mAP_m": 0.058, "bbox_mAP_l": 0.164, "bbox_mAP_copypaste": "0.138 0.298 0.121 0.000 0.058 0.164"}}
