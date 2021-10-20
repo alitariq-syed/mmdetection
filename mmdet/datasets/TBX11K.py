@@ -18,23 +18,23 @@ from .custom import CustomDataset
 
 
 @DATASETS.register_module()
-class CocoDataset(CustomDataset):
+class TBX11K(CustomDataset):
 
-    CLASSES = ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
-               'train', 'truck', 'boat', 'traffic light', 'fire hydrant',
-               'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
-               'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe',
-               'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
-               'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat',
-               'baseball glove', 'skateboard', 'surfboard', 'tennis racket',
-               'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl',
-               'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot',
-               'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
-               'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop',
-               'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
-               'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock',
-               'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush')
-#    CLASSES = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
+#    CLASSES = ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
+#               'train', 'truck', 'boat', 'traffic light', 'fire hydrant',
+#               'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
+#               'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe',
+#               'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
+#               'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat',
+#               'baseball glove', 'skateboard', 'surfboard', 'tennis racket',
+#               'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl',
+#               'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot',
+#               'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
+#               'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop',
+#               'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
+#               'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock',
+#               'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush')
+    CLASSES = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
 
     def load_annotations(self, ann_file):
         """Load annotation from COCO style annotation file.
@@ -49,9 +49,12 @@ class CocoDataset(CustomDataset):
         self.coco = COCO(ann_file)
         # The order of returned `cat_ids` will not
         # change with the order of the CLASSES
-        self.cat_ids = self.coco.get_cat_ids(cat_names=self.CLASSES)
+#        self.cat_ids = self.coco.get_cat_ids(cat_names=self.CLASSES)
+        self.cat_ids = self.coco.get_cat_ids()
+        
 
         self.cat2label = {cat_id: i for i, cat_id in enumerate(self.cat_ids)}
+        
         self.img_ids = self.coco.get_img_ids()
         data_infos = []
         total_ann_ids = []
@@ -216,8 +219,8 @@ class CocoDataset(CustomDataset):
     def _det2json(self, results):
         """Convert detection results to COCO json style."""
         json_results = []
-#        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-#        print(self.cat_ids)
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print(self.cat_ids)
         for idx in range(len(self)):
             img_id = self.img_ids[idx]
             result = results[idx]
@@ -230,6 +233,8 @@ class CocoDataset(CustomDataset):
                     data['score'] = float(bboxes[i][4])
                     data['category_id'] = self.cat_ids[label]
                     json_results.append(data)
+        print("\njson_resultsjson_resultsjson_resultsjson_results",json_results)
+        print("\n")
         return json_results
 
     def _segm2json(self, results):
@@ -295,6 +300,7 @@ class CocoDataset(CustomDataset):
             result_files['bbox'] = f'{outfile_prefix}.bbox.json'
             result_files['proposal'] = f'{outfile_prefix}.bbox.json'
             mmcv.dump(json_results, result_files['bbox'])
+            print("result_filesresult_filesresult_filesresult_files",result_files)
         elif isinstance(results[0], tuple):
             json_results = self._segm2json(results)
             result_files['bbox'] = f'{outfile_prefix}.bbox.json'
@@ -415,6 +421,7 @@ class CocoDataset(CustomDataset):
                 metric_items = [metric_items]
 
         result_files, tmp_dir = self.format_results(results, jsonfile_prefix)
+        print("result_filesresult_filesresult_filesresult_files",result_files)
 
         eval_results = OrderedDict()
         cocoGt = self.coco

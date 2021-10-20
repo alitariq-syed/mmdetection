@@ -14,9 +14,10 @@ from .utils import (NumClassCheckHook, get_loading_pipeline,
 from .voc import VOCDataset
 from .wider_face import WIDERFaceDataset
 from .xml_style import XMLDataset
+from .TBX11K import TBX11K
 
 __all__ = [
-    'CustomDataset', 'XMLDataset', 'CocoDataset', 'DeepFashionDataset',
+    'CustomDataset', 'XMLDataset', 'CocoDataset', 'TBX11K', 'DeepFashionDataset',
     'VOCDataset', 'CityscapesDataset', 'LVISDataset', 'LVISV05Dataset',
     'LVISV1Dataset', 'GroupSampler', 'DistributedGroupSampler',
     'DistributedSampler', 'build_dataloader', 'ConcatDataset', 'RepeatDataset',

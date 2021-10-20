@@ -122,7 +122,7 @@ model = dict(
             score_thr=0.05,
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=100)))
-dataset_type = 'CocoDataset'
+dataset_type = 'TBX11K'
 data_root = 'data/TBX11K/'
 classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
 img_norm_cfg = dict(
@@ -164,7 +164,7 @@ data = dict(
     samples_per_gpu=16,
     workers_per_gpu=1,
     train=dict(
-        type='CocoDataset',
+        type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_train_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
@@ -183,7 +183,7 @@ data = dict(
         ],
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     val=dict(
-        type='CocoDataset',
+        type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
@@ -207,7 +207,7 @@ data = dict(
         ],
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     test=dict(
-        type='CocoDataset',
+        type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
