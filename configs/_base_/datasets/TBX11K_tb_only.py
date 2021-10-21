@@ -36,7 +36,7 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations/json/TBX11K_train_only_tb.json',
+        ann_file=data_root + 'annotations/json/TBX11K_trainval_only_tb.json',
         img_prefix=data_root + 'imgs/',
         pipeline=train_pipeline),
     val=dict(
@@ -46,7 +46,7 @@ data = dict(
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations/json/TBX11K_val_only_tb.json',
+        ann_file=data_root + 'annotations/json/all_test.json',
         img_prefix=data_root + 'imgs/',
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
