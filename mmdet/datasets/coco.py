@@ -34,7 +34,6 @@ class CocoDataset(CustomDataset):
                'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
                'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock',
                'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush')
-#    CLASSES = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
 
     def load_annotations(self, ann_file):
         """Load annotation from COCO style annotation file.
@@ -216,8 +215,6 @@ class CocoDataset(CustomDataset):
     def _det2json(self, results):
         """Convert detection results to COCO json style."""
         json_results = []
-#        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-#        print(self.cat_ids)
         for idx in range(len(self)):
             img_id = self.img_ids[idx]
             result = results[idx]
@@ -560,3 +557,4 @@ class CocoDataset(CustomDataset):
         if tmp_dir is not None:
             tmp_dir.cleanup()
         return eval_results
+
