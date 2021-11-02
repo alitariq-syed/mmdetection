@@ -62,28 +62,7 @@ model = dict(
             reg_class_agnostic=False,
             loss_cls=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
-        train_cfg=dict(
-            assigner=dict(
-                type='MaxIoUAssigner',
-                pos_iou_thr=0.5,
-                neg_iou_thr=0.5,
-                min_pos_iou=0.5,
-                match_low_quality=False,
-                ignore_iof_thr=-1),
-            sampler=dict(
-                type='RandomSampler',
-                num=512,
-                pos_fraction=0.25,
-                neg_pos_ub=-1,
-                add_gt_as_proposals=True),
-            pos_weight=-1,
-            debug=False),
-        test_cfg=dict(
-            score_thr=0.05,
-            nms=dict(type='nms', iou_threshold=0.5),
-            max_per_img=100),
-        pretrained=None),
+            loss_bbox=dict(type='L1Loss', loss_weight=1.0))),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -175,7 +154,7 @@ data = dict(
     workers_per_gpu=1,
     train=dict(
         type='CocoDataset',
-        ann_file='data/TBX11K/annotations/json/TBX11K_train_only_tb.json',
+        ann_file='data/TBX11K/annotations/json/TBX11K_trainval_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -218,7 +197,7 @@ data = dict(
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     test=dict(
         type='CocoDataset',
-        ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
+        ann_file='data/TBX11K/annotations/json/all_test.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -240,7 +219,7 @@ data = dict(
                 ])
         ],
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')))
-evaluation = dict(interval=10, metric='bbox', by_epoch=True)
+evaluation = dict(interval=1, metric='bbox')
 optimizer = dict(
     type='AdamW',
     lr=0.005,
@@ -251,7 +230,7 @@ optimizer = dict(
             absolute_pos_embed=dict(decay_mult=0.0),
             relative_position_bias_table=dict(decay_mult=0.0),
             norm=dict(decay_mult=0.0))))
-optimizer_config = dict(grad_clip=None, type='OptimizerHook')
+optimizer_config = dict(grad_clip=None)
 lr_config = dict(
     policy='CosineAnnealing',
     warmup='linear',
@@ -259,7 +238,7 @@ lr_config = dict(
     warmup_ratio=0.001,
     min_lr=0)
 runner = dict(type='EpochBasedRunner', max_epochs=300)
-checkpoint_config = dict(interval=10, max_keep_ckpts=2, type='CheckpointHook')
+checkpoint_config = dict(interval=10, max_keep_ckpts=2)
 log_config = dict(interval=17, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
