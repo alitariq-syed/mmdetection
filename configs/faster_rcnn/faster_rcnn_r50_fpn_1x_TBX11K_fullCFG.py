@@ -124,7 +124,7 @@ model = dict(
             max_per_img=100)))
 dataset_type = 'CocoDataset'
 data_root = 'data/TBX11K/'
-classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
+classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis',)
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -164,7 +164,7 @@ data = dict(
     samples_per_gpu=16,
     workers_per_gpu=1,
     train=dict(
-        type='CocoDataset',
+        type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_train_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
@@ -181,9 +181,10 @@ data = dict(
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
         ],
-        classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
+        #classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
+        ),
     val=dict(
-        type='CocoDataset',
+        type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
@@ -207,7 +208,7 @@ data = dict(
         ],
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     test=dict(
-        type='CocoDataset',
+        type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
@@ -229,7 +230,8 @@ data = dict(
                     dict(type='Collect', keys=['img'])
                 ])
         ],
-        classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')))
+        #classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
+        ))
 evaluation = dict(interval=10, metric='bbox')
 optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None, type='OptimizerHook')
