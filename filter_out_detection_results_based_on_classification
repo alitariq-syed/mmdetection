@@ -10,7 +10,8 @@ Created on Thu Oct 21 16:13:51 2021
 import numpy as np
 import json
 
-detection_dir = './tutorial_swin/'
+#detection_dir = './tutorial_swin/'
+detection_dir = './tutorial_swin_C1/'
 
 f = open(detection_dir+'my_results.bbox.json')
 detect_dict = json.load(f)
@@ -38,5 +39,5 @@ for i in range(len(detect_dict)):
     if detect_dict[i]['image_id'] in tb_image_ids:
         refined_list.append(detect_dict[i])
         
-with open(detection_dir+'refined_my_results_C1_swin_class.bbox.json', 'w') as f:
+with open(detection_dir+'refined_my_results_C1_swin_class_and_det.bbox.json', 'w') as f:
     json.dump(refined_list, f)
