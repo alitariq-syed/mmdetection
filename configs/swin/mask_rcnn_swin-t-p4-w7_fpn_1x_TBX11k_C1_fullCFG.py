@@ -1,18 +1,29 @@
 model = dict(
     type='FasterRCNN',
     backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=4,
+        type='SwinTransformer',
+        embed_dims=96,
+        depths=[2, 2, 6, 2],
+        num_heads=[3, 6, 12, 24],
+        window_size=7,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        attn_drop_rate=0.0,
+        drop_path_rate=0.2,
+        patch_norm=True,
         out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=True),
-        norm_eval=True,
-        style='pytorch',
-        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
+        with_cp=False,
+        convert_weights=True,
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
+        )),
     neck=dict(
         type='FPN',
-        in_channels=[256, 512, 1024, 2048],
+        in_channels=[96, 192, 384, 768],
         out_channels=256,
         num_outs=5),
     rpn_head=dict(
@@ -51,28 +62,7 @@ model = dict(
             reg_class_agnostic=False,
             loss_cls=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
-        train_cfg=dict(
-            assigner=dict(
-                type='MaxIoUAssigner',
-                pos_iou_thr=0.5,
-                neg_iou_thr=0.5,
-                min_pos_iou=0.5,
-                match_low_quality=False,
-                ignore_iof_thr=-1),
-            sampler=dict(
-                type='RandomSampler',
-                num=512,
-                pos_fraction=0.25,
-                neg_pos_ub=-1,
-                add_gt_as_proposals=True),
-            pos_weight=-1,
-            debug=False),
-        test_cfg=dict(
-            score_thr=0.05,
-            nms=dict(type='nms', iou_threshold=0.5),
-            max_per_img=100),
-        pretrained=None),
+            loss_bbox=dict(type='L1Loss', loss_weight=1.0))),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -124,7 +114,6 @@ model = dict(
             max_per_img=100)))
 dataset_type = 'CocoDataset'
 data_root = 'data/TBX11K/'
-classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis',)
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -161,11 +150,11 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=16,
+    samples_per_gpu=48,
     workers_per_gpu=1,
     train=dict(
         type='TBX11K',
-        ann_file='data/TBX11K/annotations/json/TBX11K_train_only_tb.json',
+        ann_file='data/TBX11K/annotations/json/TBX11K_trainval_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -181,8 +170,7 @@ data = dict(
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
         ],
-        #classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
-        ),
+        classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     val=dict(
         type='TBX11K',
         ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
@@ -230,27 +218,37 @@ data = dict(
                     dict(type='Collect', keys=['img'])
                 ])
         ],
-        #classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
-        ))
-evaluation = dict(interval=10, metric='bbox')
-optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
-optimizer_config = dict(grad_clip=None, type='OptimizerHook')
+        classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')))
+evaluation = dict(interval=1, metric='bbox')
+optimizer = dict(
+    type='AdamW',
+    lr=0.005,
+    betas=(0.9, 0.999),
+    weight_decay=0.05,
+    paramwise_cfg=dict(
+        custom_keys=dict(
+            absolute_pos_embed=dict(decay_mult=0.0),
+            relative_position_bias_table=dict(decay_mult=0.0),
+            norm=dict(decay_mult=0.0))))
+optimizer_config = dict(grad_clip=None)
 lr_config = dict(
+    policy='CosineAnnealing',
     warmup='linear',
-    warmup_iters=500,
+    warmup_iters=85,
     warmup_ratio=0.001,
-    step=[330, 420],
-    type='StepLrUpdaterHook')
-runner = dict(type='EpochBasedRunner', max_epochs=500)
-checkpoint_config = dict(interval=10, max_keep_ckpts=2, type='CheckpointHook')
-log_config = dict(interval=38, hooks=[dict(type='TextLoggerHook')])
+    min_lr=0)
+runner = dict(type='EpochBasedRunner', max_epochs=300)
+checkpoint_config = dict(interval=10, max_keep_ckpts=2)
+log_config = dict(interval=17, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-load_from = 'https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_2x_coco/faster_rcnn_r50_fpn_2x_coco_bbox_mAP-0.384_20200504_210434-a5d8aa15.pth'
+load_from = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
 resume_from = None
 workflow = [('train', 1)]
-work_dir = './tutorial_exps'
+pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
+classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
+work_dir = './tutorial_swin_C1'
 seed = 0
 gpu_ids = range(0, 1)
-total_epochs = 500
+total_epochs = 300
