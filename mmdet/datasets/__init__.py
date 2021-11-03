@@ -15,6 +15,7 @@ from .voc import VOCDataset
 from .wider_face import WIDERFaceDataset
 from .xml_style import XMLDataset
 from .TBX11K import TBX11K
+#from .TBX11K_proper_custom import TBX11KDataset2
 
 __all__ = [
     'CustomDataset', 'XMLDataset', 'CocoDataset', 'TBX11K', 'DeepFashionDataset',

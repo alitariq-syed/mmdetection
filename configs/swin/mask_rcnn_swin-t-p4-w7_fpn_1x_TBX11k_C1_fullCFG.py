@@ -62,7 +62,28 @@ model = dict(
             reg_class_agnostic=False,
             loss_cls=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0))),
+            loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
+        train_cfg=dict(
+            assigner=dict(
+                type='MaxIoUAssigner',
+                pos_iou_thr=0.5,
+                neg_iou_thr=0.5,
+                min_pos_iou=0.5,
+                match_low_quality=False,
+                ignore_iof_thr=-1),
+            sampler=dict(
+                type='RandomSampler',
+                num=512,
+                pos_fraction=0.25,
+                neg_pos_ub=-1,
+                add_gt_as_proposals=True),
+            pos_weight=-1,
+            debug=False),
+        test_cfg=dict(
+            score_thr=0.05,
+            nms=dict(type='nms', iou_threshold=0.5),
+            max_per_img=100),
+        pretrained=None),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -112,7 +133,7 @@ model = dict(
             score_thr=0.05,
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=100)))
-dataset_type = 'CocoDataset'
+dataset_type = 'TBX11K'
 data_root = 'data/TBX11K/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
@@ -222,7 +243,7 @@ data = dict(
 evaluation = dict(interval=1, metric='bbox')
 optimizer = dict(
     type='AdamW',
-    lr=0.005,
+    lr=0.0005,
     betas=(0.9, 0.999),
     weight_decay=0.05,
     paramwise_cfg=dict(
@@ -243,7 +264,7 @@ log_config = dict(interval=17, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-load_from = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+load_from = '../mmclassification/tutorial_swin_C1/epoch_300.pth'
 resume_from = None
 workflow = [('train', 1)]
 pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'

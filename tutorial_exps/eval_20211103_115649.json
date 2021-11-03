@@ -1,0 +1,1 @@
+{"config": "configs/faster_rcnn/faster_rcnn_r50_fpn_1x_TBX11K_fullCFG.py", "metric": {"AP50": 0.002, "mAP": 0.002016128972172737}}

@@ -122,7 +122,7 @@ model = dict(
             score_thr=0.05,
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=100)))
-dataset_type = 'CocoDataset'
+dataset_type = 'TBX11K'
 data_root = 'data/TBX11K/'
 classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis',)
 img_norm_cfg = dict(
