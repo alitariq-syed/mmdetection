@@ -3,7 +3,10 @@ _base_ = [
     '../_base_/datasets/TBX11K_tb_only.py',
     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
-pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
+#pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
+#train using swin-t classification model weights (weight sharing)
+pretrained = '../mmclassification/tutorial_swin_C1/epoch_300.pth'
+
 model = dict(
     type='FasterRCNN',
     backbone=dict(
