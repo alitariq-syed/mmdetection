@@ -39,5 +39,5 @@ for i in range(len(detect_dict)):
     if detect_dict[i]['image_id'] in tb_image_ids:
         refined_list.append(detect_dict[i])
         
-with open(detection_dir+'refined_my_results_C1_swin_class_and_det.bbox.json', 'w') as f:
+with open(detection_dir+'refined_my_results_C1_swin_class_and_det_7.bbox.json', 'w') as f:
     json.dump(refined_list, f)
