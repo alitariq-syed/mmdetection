@@ -18,7 +18,8 @@ model = dict(
         convert_weights=True,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='../mmclassification/tutorial_swin_C1/epoch_300.pth')),
+            checkpoint=
+            '../../../mmclassification/tutorial_swin_C1/epoch_300.pth')),
     neck=dict(
         type='FPN',
         in_channels=[96, 192, 384, 768],
@@ -197,7 +198,7 @@ data = dict(
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     test=dict(
         type='TBX11K',
-        ann_file='data/TBX11K/annotations/json/all_test.json',
+        ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -243,10 +244,10 @@ log_config = dict(interval=17, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-load_from = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+load_from = None
 resume_from = None
 workflow = [('train', 1)]
-pretrained = '../mmclassification/tutorial_swin_C1/epoch_300.pth'
+pretrained = '../../../mmclassification/tutorial_swin_C1/epoch_300.pth'
 classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
 work_dir = './tutorial_swin_C1'
 seed = 0
