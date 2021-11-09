@@ -8,7 +8,7 @@ _base_ = [
 pretrained = '../../../mmclassification/tutorial_swin_C1/epoch_300.pth'
 
 #for neck and other output layers
-#load_path ='https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+load_path ='https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
 
 model = dict(
     type='FasterRCNN',
@@ -30,11 +30,11 @@ model = dict(
         with_cp=False,
         convert_weights=True,
         init_cfg=dict(type='Pretrained', checkpoint=pretrained)),
-    neck=dict(in_channels=[96, 192, 384, 768]))
-   # 		init_cfg=dict(type='Pretrained', checkpoint=load_path)),
-   # rpn_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path)),
-   # roi_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path))
-   # )
+    neck=dict(in_channels=[96, 192, 384, 768],#))
+    		init_cfg=dict(type='Pretrained', checkpoint=load_path)),
+    rpn_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path)),
+    roi_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path))
+    )
 
 optimizer = dict(
     _delete_=True,

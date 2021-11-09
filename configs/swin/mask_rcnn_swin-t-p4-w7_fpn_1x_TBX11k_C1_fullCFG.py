@@ -24,7 +24,12 @@ model = dict(
         type='FPN',
         in_channels=[96, 192, 384, 768],
         out_channels=256,
-        num_outs=5),
+        num_outs=5,
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+        )),
     rpn_head=dict(
         type='RPNHead',
         in_channels=256,
@@ -40,7 +45,12 @@ model = dict(
             target_stds=[1.0, 1.0, 1.0, 1.0]),
         loss_cls=dict(
             type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
-        loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
+        loss_bbox=dict(type='L1Loss', loss_weight=1.0),
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+        )),
     roi_head=dict(
         type='StandardRoIHead',
         bbox_roi_extractor=dict(
@@ -61,7 +71,12 @@ model = dict(
             reg_class_agnostic=False,
             loss_cls=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0))),
+            loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+        )),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -198,7 +213,7 @@ data = dict(
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     test=dict(
         type='TBX11K',
-        ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
+        ann_file='data/TBX11K/annotations/json/all_test.json',
         img_prefix='data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -235,10 +250,10 @@ optimizer_config = dict(grad_clip=None)
 lr_config = dict(
     policy='CosineAnnealing',
     warmup='linear',
-    warmup_iters=85,
+    warmup_iters=170,
     warmup_ratio=0.001,
     min_lr=0)
-runner = dict(type='EpochBasedRunner', max_epochs=300)
+runner = dict(type='EpochBasedRunner', max_epochs=600)
 checkpoint_config = dict(interval=10, max_keep_ckpts=2)
 log_config = dict(interval=17, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
@@ -248,8 +263,9 @@ load_from = None
 resume_from = None
 workflow = [('train', 1)]
 pretrained = '../../../mmclassification/tutorial_swin_C1/epoch_300.pth'
+load_path = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
 classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
 work_dir = './tutorial_swin_C1'
 seed = 0
 gpu_ids = range(0, 1)
-total_epochs = 300
+total_epochs = 600
