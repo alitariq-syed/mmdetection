@@ -3,9 +3,9 @@ _base_ = [
     '../_base_/datasets/TBX11K_tb_only.py',
     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
-#pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
+pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
 #train using swin-t classification model weights (weight sharing)
-pretrained = '../../../mmclassification/tutorial_swin_C1/epoch_300.pth'
+#pretrained = '../../../mmclassification/tutorial_swin_C1/epoch_300.pth'
 
 #for neck and other output layers
 load_path ='https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
@@ -30,11 +30,11 @@ model = dict(
         with_cp=False,
         convert_weights=True,
         init_cfg=dict(type='Pretrained', checkpoint=pretrained)),
-    neck=dict(in_channels=[96, 192, 384, 768],#))
-    		init_cfg=dict(type='Pretrained', checkpoint=load_path)),
-    rpn_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path)),
-    roi_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path))
-    )
+    neck=dict(in_channels=[96, 192, 384, 768]))
+   # 		init_cfg=dict(type='Pretrained', checkpoint=load_path)),
+   # rpn_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path)),
+   # roi_head=dict(init_cfg=dict(type='Pretrained', checkpoint=load_path))
+   # )
 
 optimizer = dict(
     _delete_=True,
