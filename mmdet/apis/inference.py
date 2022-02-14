@@ -87,7 +87,7 @@ class LoadImage:
         return results
 
 
-def inference_detector(model, imgs):
+def inference_detector(model, imgs, cfg):
     """Inference image(s) with the detector.
 
     Args:
@@ -106,7 +106,7 @@ def inference_detector(model, imgs):
         imgs = [imgs]
         is_batch = False
 
-    cfg = model.cfg
+#    cfg = model.cfg
     device = next(model.parameters()).device  # model device
 
     if isinstance(imgs[0], np.ndarray):
