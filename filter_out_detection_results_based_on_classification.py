@@ -19,7 +19,7 @@ f.close()
 
 #class_result = np.loadtxt(detection_dir+'output_results_formatted_C1.txt')
 # class_result = np.loadtxt(detection_dir+'output_results_formatted_swin.txt')
-class_result = np.loadtxt(detection_dir+'output_results_formatted_swin_remaining_exps_2.txt')
+class_result = np.loadtxt(detection_dir+'output_results_formatted_swin_remaining_exps_3.txt')
 
 
 
@@ -40,5 +40,5 @@ for i in range(len(detect_dict)):
     if detect_dict[i]['image_id'] in tb_image_ids:
         refined_list.append(detect_dict[i])
         
-with open(detection_dir+'refined_my_results_C1_swin_class_and_det_12.bbox.json', 'w') as f:
+with open(detection_dir+'refined_my_results_C1_swin_class_and_det_13.bbox.json', 'w') as f:
     json.dump(refined_list, f)
