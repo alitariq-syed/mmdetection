@@ -134,7 +134,7 @@ model = dict(
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=100)))
 dataset_type = 'TBX11K'
-data_root = 'data/TBX11K/'
+data_root = '../mmdetection/data/TBX11K/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -175,12 +175,12 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=48,
+    samples_per_gpu=2, #48
     workers_per_gpu=1,
     train=dict(
         type='TBX11K',
-        ann_file='data/TBX11K/annotations/json/TBX11K_trainval_only_tb.json',
-        img_prefix='data/TBX11K/imgs/',
+        ann_file='./data/annotations/json/TBX11K_trainval_only_tb.json',
+        img_prefix='../mmdetection/data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -202,8 +202,8 @@ data = dict(
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     val=dict(
         type='TBX11K',
-        ann_file='data/TBX11K/annotations/json/TBX11K_val_only_tb.json',
-        img_prefix='data/TBX11K/imgs/',
+        ann_file='./data/annotations/json/TBX11K_val_only_tb.json',
+        img_prefix='../mmdetection/data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -226,8 +226,10 @@ data = dict(
         classes=('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')),
     test=dict(
         type='TBX11K',
-        ann_file='data/TBX11K/annotations/json/all_test.json',
-        img_prefix='data/TBX11K/imgs/',
+        ann_file='./data/annotations/json/TBX11K_val_only_tb.json',
+        img_prefix='../mmdetection/data/TBX11K/imgs/',
+#        ann_file='./data/annotations/json/all_test.json',
+#        img_prefix='../mmdetection/data/TBX11K/imgs/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -272,11 +274,11 @@ log_config = dict(interval=17, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-load_from = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
-resume_from = 'tutorial_swin_C1/epoch_210.pth'
+#load_from = './best_models/mask_rcnn_swin-t-TBX11k_C1_best_model-bea4ab2a.pth'
+resume_from = None
 workflow = [('train', 1)]
-pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
-load_path = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
+#pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
+#load_path = 'https://download.openmmlab.com/mmdetection/v2.0/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco_20210906_131725-bacf6f7b.pth'
 classes = ('ActiveTuberculosis', 'ObsoletePulmonaryTuberculosis')
 work_dir = './tutorial_swin_C1'
 seed = 0
